@@ -25,24 +25,17 @@ public:
 	ResponseHeader header;
 	std::string html_file;
 	std::string error_html = "html/error.html";
-	Response() { 
-		//init();
-	}
 
 	void sendResponse(int cd);
 
 private:
 	char *buffer;
-	void init();
 	bool htmlFileExists();
 	void readHTML(std::string& path);
 	void countHTML();
 	std::string constructResponse();
 };
 
-inline void Response::init() {
-	Logger::Log(Logger::INFO, "init %s", html_file.c_str());
-}
 
 inline bool Response::htmlFileExists() {
 	const fs::path html_path{"html/"};
