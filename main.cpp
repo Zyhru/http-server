@@ -19,6 +19,7 @@ public:
   Request rq;
   void spawn_server(int port);
   void run();
+  void grab_ip(char* ip, const struct sockaddr_in* client);
   static void close_connection(int signal);
 };
 
@@ -52,6 +53,8 @@ void Server::spawn_server(int port) {
 void Server::run() {
   Logger::Log(Logger::INFO, "Running server at localhost:8080. v0.1");
   int cd;
+  char ip[INET_ADDRSTRLEN];
+
   for(;;) {
     socklen_t addr_len = sizeof(client);
     if((cd = accept(sd, (struct sockaddr *)&client, &addr_len)) == -1) {
@@ -60,7 +63,8 @@ void Server::run() {
     }
 
     //TODO: print out IPv4 correctly.
-    Logger::Log(Logger::INFO, "IP address: %d", inet_ntoa(client.sin_addr));
+    grab_ip(ip, &client);
+    Logger::Log(Logger::INFO, "IP address: %s", ip);
 
     rq.recvRequest(cd);
     rq.sendURL(rs.url_path);
@@ -72,6 +76,11 @@ void Server::run() {
 
   close(sd);
 
+}
+
+void Server::grab_ip(char* ip, const struct sockaddr_in* client) {
+  struct in_addr ip_address = client->sin_addr;
+  inet_ntop(AF_INET, &ip_address, ip, INET_ADDRSTRLEN);
 }
 
 void Server::close_connection(int signal) {
