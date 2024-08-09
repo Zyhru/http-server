@@ -23,20 +23,22 @@ typedef struct ResponseHeader {
 class Response {
 public:
 	ResponseHeader header;
-	std::string html_file;
-	std::string error_html = "html/error.html";
+	std::string url_path;
+	//std::string html_file;
+	
 
 	void sendResponse(int cd);
 
 private:
 	char *buffer;
 	bool htmlFileExists();
-	void readHTML(std::string& path);
+	void readHTML(const std::string& path);
 	void countHTML();
 	std::string constructResponse();
 };
 
 
+#if 0
 inline bool Response::htmlFileExists() {
 	const fs::path html_path{"html/"};
 	for(auto& file : fs::directory_iterator(html_path)) { 
@@ -48,11 +50,13 @@ inline bool Response::htmlFileExists() {
 	}
 	return false;
 }
+#endif
 
-inline void Response::readHTML(std::string& path) {
+inline void Response::readHTML(const std::string& path) {
 	std::fstream file(path);
 	if(!file.is_open()) {
 		Logger::Log(Logger::ERROR, "Unable to open file at: %s", path.c_str());
+		header.status_code = 404;
 		return;
 	}
 
@@ -67,7 +71,19 @@ inline void Response::readHTML(std::string& path) {
 }
 
 inline void Response::sendResponse(int cd) {
-	Logger::Log(Logger::INFO, "Preparing to send response %s", html_file.c_str());
+
+	if(url_path != "/") {
+		header.status_code = 404;
+		header.message = "ERROR"; 
+		readHTML("html/error.html");
+	} else {
+		header.status_code = 200;
+		header.message = "OK"; 
+		readHTML("html/about.html");
+	}
+	
+	#if 0 
+	//Logger::Log(Logger::INFO, "Preparing to send response %s", html_file.c_str());
 	if(htmlFileExists()) {
 		header.status_code = 200;
 		header.message = "OK"; 
@@ -77,6 +93,7 @@ inline void Response::sendResponse(int cd) {
 		header.message = "ERROR"; 
 		readHTML(error_html);
 	}
+	#endif
 
 	header.content_type = "text/html"; // hard coded for now. handle .js later
 	countHTML();

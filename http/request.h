@@ -26,9 +26,9 @@ inline void Request::handleRefresh() {
 
 inline void Request::sendURL(std::string& url_s) {
 	url_s.clear();
-	url_s += "html";
-	url_s += url;	
+	url_s = url;
 }
+
 
 inline void Request::recvRequest(int cd) {
 	size_t request = recv(cd, request_header, sizeof(request_header), 0);

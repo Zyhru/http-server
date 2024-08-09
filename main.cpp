@@ -63,7 +63,7 @@ void Server::run() {
     Logger::Log(Logger::INFO, "IP address: %d", inet_ntoa(client.sin_addr));
 
     rq.recvRequest(cd);
-    rq.sendURL(rs.html_file);
+    rq.sendURL(rs.url_path);
     rs.sendResponse(cd);
     rq.handleRefresh();
 
@@ -79,16 +79,14 @@ void Server::close_connection(int signal) {
   exit(0);
 }
 
-//TODO: ./server <prompt.json>
 int main(int i, char *argv[]) {
-  OpenAI ai("OPENAI_API_KEY");
+  OpenAI ai;
   ai.sendCURL();
-  #if 1
+  
   Server server;
   const int PORT = 8080;
   Logger::Log(Logger::INFO, "Waiting for connections to server.");
   server.spawn_server(PORT);
   server.run();
-  #endif
 }
 

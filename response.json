@@ -1,0 +1,24 @@
+{
+  "id": "chatcmpl-9uSyBbGJV6UPAdnM8AsguCtcG5yPe",
+  "object": "chat.completion",
+  "created": 1723244755,
+  "model": "gpt-3.5-turbo-0125",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "<!DOCTYPE html>\n<html>\n  <head>\n    <meta charset=\"UTF-8\">\n    <title>Y2K Minimalistic Website</title>\n    <style>\n      body {\n        font-family: Arial, sans-serif;\n        background-color: #000;\n        color: #fff;\n        text-align: center;\n        margin: 0;\n        padding: 0;\n      }\n      h1 {\n        font-size: 2em;\n        margin-top: 100px;\n      }\n      p {\n        font-size: 1.2em;\n        margin: 20px 0;\n      }\n    </style>\n  </head>\n  <body>\n    <h1>Welcome to the Y2K Minimalistic Website</h1>\n    <p>This website has a Y2K-inspired design with a minimalist approach. Enjoy the simplicity!</p>\n  </body>\n</html>",
+        "refusal": null
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 18,
+    "completion_tokens": 186,
+    "total_tokens": 204
+  },
+  "system_fingerprint": null
+}
