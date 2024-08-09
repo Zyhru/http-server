@@ -62,7 +62,6 @@ void Server::run() {
       return;
     }
 
-    //TODO: print out IPv4 correctly.
     grab_ip(ip, &client);
     Logger::Log(Logger::INFO, "IP address: %s", ip);
 
