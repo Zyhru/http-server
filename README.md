@@ -1,5 +1,5 @@
 # About
-Basic HTTP server written in C++ that generates html files straight from ChatGPT
+Basic HTTP server is written in C++ that generates html files straight from ChatGPT.
 
 ## How To Run
 Running the server is easy. At the moment it will spawn a server at port 8080. 
@@ -10,5 +10,5 @@ Make sure to set the environment variable OPENAI_API_KEY to interact with the AP
 ./build.sh
 ```
 ## Features being thought of/added
-+ CLI to generate a new prompt at run-time
-+ CLI to spawn server at different ports
++ CLI to read a prompt and send it as a request.
++ CLI to spawn server at different ports.
