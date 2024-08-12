@@ -10,21 +10,32 @@
 #include "http/response.h"
 #include "http/request.h"
 #include "openai/openai.h"
+#include "buffer.h"
 
 class Server {
 public:
-  int sd;
-  sockaddr_in server, client;
+  Server();
+  ~Server();
   Response rs;
   Request rq;
+  int sd, cd;
+  sockaddr_in server, client;
   void spawn_server(int port);
   void run();
   void grab_ip(char* ip, const struct sockaddr_in* client);
   static void close_connection(int signal);
 };
 
-void Server::spawn_server(int port) {
+Server::Server() {
 
+}
+
+Server::~Server() {
+  close(sd);
+  close(cd);
+}
+
+void Server::spawn_server(int port) {
   Logger::Log(Logger::INFO, "Spawning HTTP server with a port of: %d", port);
 
   server.sin_family = AF_INET;
@@ -47,13 +58,13 @@ void Server::spawn_server(int port) {
   }
 
   Logger::Log(Logger::INFO, "Successfully spawned server");
-
 }
 
 void Server::run() {
   Logger::Log(Logger::INFO, "Running server at localhost:8080. v0.1");
-  int cd;
   char ip[INET_ADDRSTRLEN];
+
+  Buffer buffer(4096);
 
   for(;;) {
     socklen_t addr_len = sizeof(client);
@@ -65,15 +76,14 @@ void Server::run() {
     grab_ip(ip, &client);
     Logger::Log(Logger::INFO, "IP address: %s", ip);
 
-    rq.recvRequest(cd);
+    // rq.recvRequest(cd);
+    // rs.sendResponse(cd);
+    buffer.recv_data(cd, rq);
     rq.sendURL(rs.url_path);
-    rs.sendResponse(cd);
+    buffer.send_data(cd, rs);
     rq.handleRefresh();
-
     signal(SIGINT, close_connection);
   }
-
-  close(sd);
 
 }
 
@@ -88,13 +98,14 @@ void Server::close_connection(int signal) {
 }
 
 int main(int i, char *argv[]) {
+  // TODO: ./main prompt.json
+  // grab prompt send to api as a request
+
   OpenAI ai;
   ai.sendCURL();
-  
   Server server;
   const int PORT = 8080;
   Logger::Log(Logger::INFO, "Waiting for connections to server.");
   server.spawn_server(PORT);
   server.run();
 }
-

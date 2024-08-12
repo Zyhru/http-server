@@ -8,9 +8,6 @@
 
 #include "../log/logger.h"
 
-namespace fs = std::filesystem;
-
-// Parse request and set the html file to that and then check
 
 typedef struct ResponseHeader {
 	int status_code;
@@ -24,33 +21,18 @@ class Response {
 public:
 	ResponseHeader header;
 	std::string url_path;
-	//std::string html_file;
-	
+	//void sendResponse(int cd);
+	std::string constructResponse();
 
-	void sendResponse(int cd);
+	Response() {
+		header.content_type = "text/html";
+	}
 
 private:
-	char *buffer;
-	bool htmlFileExists();
 	void readHTML(const std::string& path);
 	void countHTML();
-	std::string constructResponse();
 };
 
-
-#if 0
-inline bool Response::htmlFileExists() {
-	const fs::path html_path{"html/"};
-	for(auto& file : fs::directory_iterator(html_path)) { 
-		std::string file_name =  file.path().string();
-		size_t found = file_name.find(html_file);
-		if(found != std::string::npos) {
-			return true;
-		}
-	}
-	return false;
-}
-#endif
 
 inline void Response::readHTML(const std::string& path) {
 	std::fstream file(path);
@@ -70,6 +52,7 @@ inline void Response::readHTML(const std::string& path) {
 	file.close();
 }
 
+#if 0
 inline void Response::sendResponse(int cd) {
 
 	if(url_path != "/") {
@@ -95,9 +78,8 @@ inline void Response::sendResponse(int cd) {
 	}
 	#endif
 
-	header.content_type = "text/html"; // hard coded for now. handle .js later
-	countHTML();
-
+	
+	#if 0
 	std::string response_message = constructResponse();
 	size_t response = send(cd, response_message.c_str(), strlen(response_message.c_str()), 0);
 	int error_code = -1;
@@ -105,9 +87,23 @@ inline void Response::sendResponse(int cd) {
 		Logger::Log(Logger::ERROR, "Unable to send a request to server.");
 		return;
 	}
+	#endif
 }
+#endif
 
 inline std::string Response::constructResponse() {
+	if(url_path != "/") {
+		header.status_code = 404;
+		header.message = "ERROR"; 
+		readHTML("html/error.html");
+	} else {
+		header.status_code = 200;
+		header.message = "OK"; 
+		readHTML("html/about.html");
+	}
+	
+	countHTML();
+
 	std::string response_header = "HTTP/1.1 ";
 	response_header += std::to_string(header.status_code) + "\r\n";
 	response_header += "Content-Type: " + header.content_type + "\r\n";

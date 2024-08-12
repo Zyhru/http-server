@@ -5,13 +5,9 @@
 #include <fstream>
 #include "../log/logger.h"
 
-
 class Util {
 public:
-	typedef enum ModeE {
-		READ, WRITE
-
-	} ModeE;
+	enum ModeE { READ, WRITE };
 	std::fstream openFile(const std::string& file_name, ModeE mode);
 };
 

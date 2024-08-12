@@ -3,7 +3,7 @@
 #include <cstdarg>
 #include <stdio.h>
 
-
+// TODO: std::format (C++ 20)
 class Logger {
 public: 
 	enum ELevel {INFO, ERROR};
