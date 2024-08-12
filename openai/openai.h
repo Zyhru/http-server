@@ -9,9 +9,9 @@
 #include "../json/single_include/nlohmann/json.hpp"
 #include "../json/include/nlohmann/json.hpp"
 
+using json = nlohmann::json;
 
 class OpenAI {
-using json = nlohmann::json;
 
 struct Memory {
 	char *response;
@@ -40,6 +40,7 @@ private:
 	void writeResponse();
 	void parseHTML(std::string& result);
 	void saveHTML(std::string& result);
+	json createReqJson();
 	
 	static size_t write_data(void *buffer, size_t size, size_t nmemb, void *userp) {
 		size_t realsize = size * nmemb;

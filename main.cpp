@@ -27,7 +27,7 @@ public:
 };
 
 Server::Server() {
-
+  Logger::Log(Logger::INFO, "Waiting for connections to server.");
 }
 
 Server::~Server() {
@@ -63,7 +63,6 @@ void Server::spawn_server(int port) {
 void Server::run() {
   Logger::Log(Logger::INFO, "Running server at localhost:8080. v0.1");
   char ip[INET_ADDRSTRLEN];
-
   Buffer buffer(4096);
 
   for(;;) {
@@ -76,8 +75,6 @@ void Server::run() {
     grab_ip(ip, &client);
     Logger::Log(Logger::INFO, "IP address: %s", ip);
 
-    // rq.recvRequest(cd);
-    // rs.sendResponse(cd);
     buffer.recv_data(cd, rq);
     rq.sendURL(rs.url_path);
     buffer.send_data(cd, rs);
@@ -97,15 +94,12 @@ void Server::close_connection(int signal) {
   exit(0);
 }
 
-int main(int i, char *argv[]) {
-  // TODO: ./main prompt.json
-  // grab prompt send to api as a request
+int main(int argc, char *argv[]) {
+  const int PORT = 8080;
 
   OpenAI ai;
   ai.sendCURL();
   Server server;
-  const int PORT = 8080;
-  Logger::Log(Logger::INFO, "Waiting for connections to server.");
   server.spawn_server(PORT);
   server.run();
 }

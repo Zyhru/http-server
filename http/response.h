@@ -21,7 +21,6 @@ class Response {
 public:
 	ResponseHeader header;
 	std::string url_path;
-	//void sendResponse(int cd);
 	std::string constructResponse();
 
 	Response() {
@@ -51,45 +50,6 @@ inline void Response::readHTML(const std::string& path) {
 	header.body = html_data;
 	file.close();
 }
-
-#if 0
-inline void Response::sendResponse(int cd) {
-
-	if(url_path != "/") {
-		header.status_code = 404;
-		header.message = "ERROR"; 
-		readHTML("html/error.html");
-	} else {
-		header.status_code = 200;
-		header.message = "OK"; 
-		readHTML("html/about.html");
-	}
-	
-	#if 0 
-	//Logger::Log(Logger::INFO, "Preparing to send response %s", html_file.c_str());
-	if(htmlFileExists()) {
-		header.status_code = 200;
-		header.message = "OK"; 
-		readHTML(html_file);
-	} else {
-		header.status_code = 404;
-		header.message = "ERROR"; 
-		readHTML(error_html);
-	}
-	#endif
-
-	
-	#if 0
-	std::string response_message = constructResponse();
-	size_t response = send(cd, response_message.c_str(), strlen(response_message.c_str()), 0);
-	int error_code = -1;
-	if(response == error_code) {
-		Logger::Log(Logger::ERROR, "Unable to send a request to server.");
-		return;
-	}
-	#endif
-}
-#endif
 
 inline std::string Response::constructResponse() {
 	if(url_path != "/") {

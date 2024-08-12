@@ -26,17 +26,7 @@ void OpenAI::init() {
   Logger::Log(Logger::INFO, "Initializing libcurl...");
   setAPIKey("OPENAI_API_KEY");
 
-  auto req = R"({
-    "model" : "gpt-3.5-turbo",
-    "messages": [
-        {
-          "role": "user",
-          "content": "generate me a y2k minilistic html file"
-        }
-     ]
-    }
-  )"_json;
-  data = req.dump();
+  data = createReqJson().dump();
   chunk.response = (char *)malloc(1);
   chunk.size = 0;
   curl_global_init(CURL_GLOBAL_ALL);
@@ -76,7 +66,7 @@ void OpenAI::sendCURL() {
 }
 
 void OpenAI::writeResponse() {
-      //Logger::Log(Logger::INFO, "writing JSON payload to response.json.. %s", chunk.response);
+      Logger::Log(Logger::INFO, "writing JSON payload to response.json.. %s", chunk.response);
       Logger::Log(Logger::INFO, "writing json response to file..");
       std::fstream w_file = u.openFile(json_file, Util::WRITE);
       w_file << chunk.response;
@@ -107,3 +97,18 @@ void OpenAI::saveHTML(std::string& result) {
   about_html.close();
 }
 
+json OpenAI::createReqJson() {
+  std::stringstream prompt;
+  std::fstream prompt_opts = u.openFile("prompt.txt", Util::READ);
+  prompt << prompt_opts.rdbuf();
+
+  json request = {
+    {"model", "gpt-3.5-turbo"},
+    {"messages", json::array({
+    {{"role", "user"},  {"content", prompt.str()}}
+    })},
+  };
+
+ //Logger::Log(Logger::INFO, "Prompt Request: \n%s", request.dump().c_str());
+ return request;
+}

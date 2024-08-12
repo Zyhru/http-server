@@ -1,0 +1,8 @@
+prompt: Generate me a Y2K minilistic html webpage (below are the options)
+name: zai
+about: software engineer. i like to build things
+glitchy-text: yes
+animation: yes
+github: https://github.com/zyhru
+x: https://x.com/z7hru
+quote: knowledge isn't free, you have to pay attention
